@@ -14,3 +14,7 @@ The pipeline uses k-mer correction, De bruijn grah assembly with long reads, and
     + Complete De Bruijn graph-mediated assembly using k-mer corrected data.  
 4. Module:Unicycler Assembly and Polish
     + Complete hybrid assembly, polish, and ori-identification using Flye .gfa and k-mer corrected Illumina data.
+
+# Dependencies
+# Usage
+# Citations
