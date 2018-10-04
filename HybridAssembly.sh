@@ -93,7 +93,7 @@ source activate py36
 FLYEGFA="$FLYEOUT"2-repeat/graph_final.gfa
 mkdir "$UNICYCLEROUT"
 
-unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUT" --verbosity 4 --vcf -t 14 --existing_long_read_assembly "$FLYEGFA" --start_genes $ORIGINFASTA -o "$UNICYCLEROUT"
+unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUT" --verbosity 4 --vcf -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
 
 # Exit py36 Environment
 source deactivate
