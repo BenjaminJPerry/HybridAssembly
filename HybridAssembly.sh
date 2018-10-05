@@ -61,10 +61,10 @@ UNICYCLEROUT="Unicycler_Assembly/"
 source activate py36
 
 # Module 1
-# SPAdes K-mer Correction of Illumina Data py36
-# spades.py -1 "$ILLUMINAR1" -2 "$ILLUMINAR2" -o "$SPADESCOROUT" --only-error-correction -t 14 -m 24
-# SPADESCOROUTR1="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R1"`
-# SPADESCOROUTR2="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R2"`
+SPAdes K-mer Correction of Illumina Data py36
+spades.py -1 "$ILLUMINAR1" -2 "$ILLUMINAR2" -o "$SPADESCOROUT" --only-error-correction -t 14 -m 24
+SPADESCOROUTR1="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R1"`
+SPADESCOROUTR2="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R2"`
 
 # Module 2
 # LoRDEC K-mer Correction of the Nanopore Long Reads py36
@@ -95,6 +95,9 @@ FLYEGFA="$FLYEOUT"2-repeat/graph_final.gfa
 mkdir "$UNICYCLEROUT"
 
 unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 3 --vcf -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
+
+# Module 4
+cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
 
 # Exit py36 Environment
 source deactivate
