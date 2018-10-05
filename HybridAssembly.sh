@@ -1,9 +1,9 @@
 # 2018 Benjamin J Perry - Attribution-NonCommercial-ShareAlike 4.0 International
 # (CC BY-NC-SA 4.0)
-# Version: 0.1.0
+# Version: 1.1.0
 # Maintainer: Benjamin J Perry
 # Email: benjamin.perry@postgrad.otago.ac.nz
-# Status: Production
+# Status: Functional
 #
 #!/bin/bash
 # Overview: Nanopore + Illumina Hybrid Assembly Pipeline
@@ -23,6 +23,7 @@ printf "\n\n"
 printf "2018 Benjamin J Perry - (CC BY-NC-SA 4.0)\n"
 printf "Author: Benjamin .J Perry\n"
 printf "Email: benjamin.perry@postgrad.otago.ac.nz\n"
+printf "Version: v1.1.0\n\n"
 printf "Revised: 3/10/2018\n\n"
 sleep 5
 
@@ -60,11 +61,23 @@ UNICYCLEROUT="Unicycler_Assembly/"
 # Set Environment to python v3.6
 source activate py36
 
+printf "\n"
+printf "#####################################################################\n"
+printf "###             Module 1: SPAdes k-mer Correction                ###\n"
+printf "#####################################################################\n"
+printf "\n\n"
+
 # Module 1
 SPAdes K-mer Correction of Illumina Data py36
 spades.py -1 "$ILLUMINAR1" -2 "$ILLUMINAR2" -o "$SPADESCOROUT" --only-error-correction -t 14 -m 24
 SPADESCOROUTR1="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R1"`
 SPADESCOROUTR2="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R2"`
+
+printf "\n"
+printf "#####################################################################\n"
+printf "###          Module 2: LoRDEC Long-Read k-mer Correction          ###\n"
+printf "#####################################################################\n"
+printf "\n\n"
 
 # Module 2
 # LoRDEC K-mer Correction of the Nanopore Long Reads py36
@@ -74,13 +87,18 @@ ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN".cat.cor.fastq.gz
 # cat "$SPADESCOROUTR1" "$SPADESCOROUTR2" > "$ILLUMINASPADESCOR"
 lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 19 -s 3 -T 14 -p -o "$LORDECCOROUTFILE"
 
-
 # Exit py36 Environment
 source deactivate
 # Set Environment to python v2.7
 source activate py27
 
-# Module 3
+printf "\n"
+printf "#####################################################################\n"
+printf "###        Module 3: Flye de novo Assembly with Long-Reads        ###\n"
+printf "#####################################################################\n"
+printf "\n\n"
+
+#0 Module 3
 # Flye Genome Assembly of the LoRDEC Corrected Long Reads py27
 flye --nano-corr "$LORDECCOROUTFILE" -g 7m --out-dir "$FLYEOUT" -t 14
 
@@ -88,6 +106,12 @@ flye --nano-corr "$LORDECCOROUTFILE" -g 7m --out-dir "$FLYEOUT" -t 14
 source deactivate
 # Set Environment to python v3.6
 source activate py36
+
+printf "\n"
+printf "#####################################################################\n"
+printf "###             Module 4: Unicycler Hybrid Assembly               ###\n"
+printf "#####################################################################\n"
+printf "\n\n"
 
 # Module 4
 # Unicycler Hybrid Assembly with Corrected Illumina and Nanopore Reads py36
@@ -101,6 +125,9 @@ cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
 
 # Exit py36 Environment
 source deactivate
+
+printf "Thank you for using the Hybrid Assembly Pipeline :D\n"
+printf "K bye.\n\n"
 
 # Exit Pipeline
 exit
