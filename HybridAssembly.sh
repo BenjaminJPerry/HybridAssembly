@@ -56,7 +56,7 @@ SPADESCOROUT="SPAdes_Cor/" # SPAdes makes it's own dir when specified
 LORDECCOROUT="LoRDEC_Cor/" # Must explicity make dir
 FLYEOUT="Flye_Assembly/" # Flye makes it's own dir when specified
 UNICYCLEROUT="Unicycler_Assembly/"
-ORIGINFASTA=""
+
 # Set Environment to python v3.6
 source activate py36
 
