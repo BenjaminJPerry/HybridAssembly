@@ -118,7 +118,7 @@ printf "\n\n"
 FLYEGFA="$FLYEOUT"2-repeat/graph_final.gfa
 mkdir "$UNICYCLEROUT"
 
-unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 3 --vcf -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
+unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 2 --vcf -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
 
 # Module 4
 cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
