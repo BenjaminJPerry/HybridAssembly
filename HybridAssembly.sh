@@ -17,7 +17,7 @@
 clear
 printf "\n"
 printf "#####################################################################\n"
-printf "###             ONT Illumina Hybris Assembly Pipeline             ###\n"
+printf "###             ONT Illumina Hybrid Assembly Pipeline             ###\n"
 printf "#####################################################################\n"
 printf "\n\n"
 printf "2018 Benjamin J Perry - (CC BY-NC-SA 4.0)\n"
@@ -68,7 +68,7 @@ printf "#####################################################################\n"
 printf "\n\n"
 
 # Module 1
-SPAdes K-mer Correction of Illumina Data py36
+# SPAdes K-mer Correction of Illumina Data py36
 spades.py -1 "$ILLUMINAR1" -2 "$ILLUMINAR2" -o "$SPADESCOROUT" --only-error-correction -t 14 -m 24
 SPADESCOROUTR1="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R1"`
 SPADESCOROUTR2="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R2"`
@@ -83,8 +83,8 @@ printf "\n\n"
 # LoRDEC K-mer Correction of the Nanopore Long Reads py36
 mkdir "$LORDECCOROUT"
 LORDECCOROUTFILE="$LORDECCOROUT""$STRAIN".lordec.fasta
-ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN".cat.cor.fastq.gz
-# cat "$SPADESCOROUTR1" "$SPADESCOROUTR2" > "$ILLUMINASPADESCOR"
+ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN"*.cat.cor.fastq.gz
+cat "$SPADESCOROUTR1" "$SPADESCOROUTR2" > "$ILLUMINASPADESCOR"
 lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 19 -s 3 -T 14 -p -o "$LORDECCOROUTFILE"
 
 # Exit py36 Environment
