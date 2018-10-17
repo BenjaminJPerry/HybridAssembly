@@ -1,0 +1,7 @@
+organism: Mesorhizobium loti R88B 
+contigs: 1
+bases: 7207166
+rRNA: 6
+tmRNA: 1
+CDS: 6861
+tRNA: 52

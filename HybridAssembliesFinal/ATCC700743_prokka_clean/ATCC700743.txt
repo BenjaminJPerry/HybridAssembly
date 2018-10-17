@@ -1,0 +1,7 @@
+organism: Mesorhizobium loti ATCC700743 
+contigs: 3
+bases: 7201057
+tmRNA: 1
+rRNA: 6
+tRNA: 56
+CDS: 6999

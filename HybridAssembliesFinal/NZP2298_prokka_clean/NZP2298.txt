@@ -1,0 +1,7 @@
+organism: Mesorhizobium loti NZP2298 
+contigs: 1
+bases: 7336816
+rRNA: 6
+tmRNA: 1
+CDS: 6903
+tRNA: 61
