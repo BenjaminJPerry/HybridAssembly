@@ -1,6 +1,6 @@
 # 2018 Benjamin J Perry - Attribution-NonCommercial-ShareAlike 4.0 International
 # (CC BY-NC-SA 4.0)
-# Version: 1.1.0
+# Version: 1.2.0
 # Maintainer: Benjamin J Perry
 # Email: benjamin.perry@postgrad.otago.ac.nz
 # Status: Functional
@@ -9,8 +9,10 @@
 # Overview: Nanopore + Illumina Hybrid Assembly Pipeline
 # Historic: Loop for trimming used
 # for i in $(ls); do porechop -i "$i"/"$i".fastq --format fastq -v 2 -t 12 -b "$i/$i"_porechop; done
+
 # Historic: Loop for read filtering used
-# for i in $(ls); do filtlong --min_length 1000 --min_window_q"$i"/"$i".adpttrim.fastq
+# for i in $(ls); do filtlong --min_length 1000 -p 80 "$i"/"$i".adpttrim.fastq
+
 # Historic: Command for long read evaluation
 # NanoPlot -t 4 --fastq SU343.adpttrim.fastq --plots hex
 
@@ -59,7 +61,7 @@ FLYEOUT="Flye_Assembly/" # Flye makes it's own dir when specified
 UNICYCLEROUT="Unicycler_Assembly/"
 
 # Set Environment to python v3.6
-source activate py36
+source activate unicycler
 
 printf "\n"
 printf "#####################################################################\n"
@@ -104,8 +106,9 @@ flye --nano-corr "$LORDECCOROUTFILE" -g 7m --out-dir "$FLYEOUT" -t 14
 
 # Exit py27 Environment
 source deactivate
+
 # Set Environment to python v3.6
-source activate py36
+source activate unicycler
 
 printf "\n"
 printf "#####################################################################\n"
@@ -118,7 +121,7 @@ printf "\n\n"
 FLYEGFA="$FLYEOUT"2-repeat/graph_final.gfa
 mkdir "$UNICYCLEROUT"
 
-unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 3 --vcf -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
+unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 2 -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
 
 # Module 4
 cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
