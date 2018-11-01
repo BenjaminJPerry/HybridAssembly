@@ -1,7 +1,0 @@
-organism: Mesorhizobium loti R7A 
-contigs: 1
-bases: 6529994
-tmRNA: 1
-CDS: 6230
-rRNA: 6
-tRNA: 58

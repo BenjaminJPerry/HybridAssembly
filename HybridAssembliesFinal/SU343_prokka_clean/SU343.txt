@@ -1,7 +1,0 @@
-organism: Mesorhizobium loti SU343 
-contigs: 3
-bases: 7200913
-rRNA: 6
-tmRNA: 1
-CDS: 6996
-tRNA: 56
