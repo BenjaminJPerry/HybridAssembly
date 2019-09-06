@@ -18,15 +18,15 @@ The pipeline uses k-mer correction, De bruijn grah assembly with long reads, and
 # Dependencies
 For managing the dependies depends on conda, the pipeline requires the following environments.    
 
-conda create -n HybridAsBro python=3.6
-source activate HybridAsBro
-conda install spades lordec unicycler
-conda deactivate
+conda create -n HybridAsBro python=3.6  
+source activate HybridAsBro  
+conda install spades lordec unicycler  
+conda deactivate  
 
-conda create -n Flye python=2.7
-source activate Flye
-conda install
-conda deactivate
+conda create -n Flye python=2.7  
+source activate Flye  
+conda install  
+conda deactivate  
 
 # Usage
 
