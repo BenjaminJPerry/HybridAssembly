@@ -1,19 +1,19 @@
 # Hybrid Assembly Pipeline
-This pipeline is for hybrid assembly of microbial genomes using ONT long read and Illumina PE read data.  
+This pipeline is for hybrid assembly of microbial genomes using ONT long read and Illumina PE data.  
 
 # Assumptions
 This pipeline assumes you have adapter trimmed and filtered the ONT long reads (min length > 1000bp).  
 Additionaly, this pipeline assumes you have pre-treated your Illumina reads but note they will be further kmer corrected.
 
 # Overview
-The pipeline uses k-mer correction, De bruijn grah assembly with long reads, and then polishing with Unicycler:
+The pipeline uses k-mer correction, De bruijn grah assembly with corrected long reads, and finally polishing with Unicycler:
 1. Module: SPAdes k-mer Correction
     + Conduct SPAdes mediate error correction of Illumina PE data.
 2. Module: LoRDEC k-mer Correction
     + Conduct LoRDEC mediated error correction of ONT long read data.
 3. Module: Flye De Novo Genome Assembly
     + Complete De Bruijn graph-mediated assembly using k-mer corrected data.  
-4. Module:Unicycler Assembly and Polish
+4. Module:Unicycler Polish
     + Polish Flye .gfa assembly with kmer corrected Illumina data.
 
 # Dependencies
