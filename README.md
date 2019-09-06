@@ -18,7 +18,7 @@ The pipeline uses k-mer correction, De bruijn grah assembly with long reads, and
 
 # Dependencies
 For managing the dependies depends on conda, the pipeline requires the following environments.    
-'''bash  
+```bash  
 conda create -n HybridAsBro python=3.6  
 source activate HybridAsBro  
 conda install spades lordec unicycler  
@@ -28,11 +28,11 @@ conda create -n Flye python=2.7
 source activate Flye  
 conda install  
 conda deactivate  
-'''  
+```  
 # Usage
-'''bash  
+```bash  
 ./HybridAssembly.sh [SAMPLEID].chop.filt.fastq Illumina.R1.fastq.gz Illumina.R2.fastq.gz
-'''  
+```  
 
 # Citations
 
