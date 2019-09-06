@@ -7,6 +7,7 @@
 #
 #!/bin/bash
 # Overview: Nanopore + Illumina Hybrid Assembly Pipeline
+
 # Historic: Loop for trimming used
 # for i in $(ls); do porechop -i "$i"/"$i".fastq --format fastq -v 2 -t 12 -b "$i/$i"_porechop; done
 
@@ -14,7 +15,7 @@
 # for i in $(ls); do filtlong --min_length 1000 -p 80 "$i"/"$i".adpttrim.fastq
 
 # Historic: Command for long read evaluation
-# NanoPlot -t 4 --fastq SU343.adpttrim.fastq --plots hex
+# NanoPlot -t 4 --fastq $i.adpttrim.fastq --plots hex
 
 clear
 printf "\n"
@@ -25,8 +26,8 @@ printf "\n\n"
 printf "2018 Benjamin J Perry - (CC BY-NC-SA 4.0)\n"
 printf "Author: Benjamin .J Perry\n"
 printf "Email: benjamin.perry@postgrad.otago.ac.nz\n"
-printf "Version: v1.1.0\n\n"
-printf "Revised: 3/10/2018\n\n"
+printf "Version: v1.2.0\n\n"
+printf "Revised: 06/09/2019\n\n"
 sleep 5
 
 printf "Begin Execution at: $(date)\n\n"
@@ -34,6 +35,21 @@ START=`date +%s`
 sleep 1
 
 ###  Check for read files ###
+if [ "$1" == "" ]; then
+	printf "No ONT Reads Indicated...\n"
+	printf "Usage: ./HybridAssembly.sh \$SAMPLE.chop.filt.*.fastq Illumina.*.R1.fastq.gz Illumina.*.R2.fastq.gz\n\n"
+	exit 1
+fi
+if [ "$2" == "" ]; then
+	printf "No Illumina R1 File Indicated...\n"
+	printf "Usage: ./HybridAssembly.sh \$SAMPLE.chop.filt.*.fastq Illumina.*.R1.fastq.gz Illumina.*.R2.fastq.gz\n\n"
+	exit 1
+fi
+if [ "$3" == "" ]; then
+	printf "No Illumina R2 File Indicated...\n"
+	printf "Usage: ./HybridAssembly.sh \$SAMPLE.chop.filt.*.fastq Illumina.*.R1.fastq.gz Illumina.*.R2.fastq.gz\n\n"
+	exit 1
+fi
 if [ -f $1 ]; then
 	ONTFILT=$1
 	printf "ONT Read File: $ONTFILT\n\n"
@@ -43,7 +59,6 @@ else
 	printf "Usage: ./HybridAssembly.sh '$STRAIN'.chop.filt.*.fastq Illumina.*.R1.fastq.gz Illumina.*.R2.fastq.gz\n\n"
 	exit 1
 fi
-
 if [ -f $2 ] && [ -f $3 ]; then
 	ILLUMINAR1=$2
 	ILLUMINAR2=$3
@@ -61,11 +76,11 @@ FLYEOUT="Flye_Assembly/" # Flye makes it's own dir when specified
 UNICYCLEROUT="Unicycler_Assembly/"
 
 # Set Environment to python v3.6
-source activate unicycler
+source activate HybridAsBro
 
 printf "\n"
 printf "#####################################################################\n"
-printf "###             Module 1: SPAdes k-mer Correction                ###\n"
+printf "###             Module 1: SPAdes k-mer Correction                 ###\n"
 printf "#####################################################################\n"
 printf "\n\n"
 
@@ -90,9 +105,9 @@ cat "$SPADESCOROUTR1" "$SPADESCOROUTR2" > "$ILLUMINASPADESCOR"
 lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 19 -s 3 -T 14 -p -o "$LORDECCOROUTFILE"
 
 # Exit py36 Environment
-source deactivate
+conda deactivate
 # Set Environment to python v2.7
-source activate py27
+source activate Flye
 
 printf "\n"
 printf "#####################################################################\n"
@@ -105,10 +120,10 @@ printf "\n\n"
 flye --nano-corr "$LORDECCOROUTFILE" -g 7m --out-dir "$FLYEOUT" -t 14
 
 # Exit py27 Environment
-source deactivate
+conda deactivate
 
 # Set Environment to python v3.6
-source activate unicycler
+source activate HybridAsBro
 
 printf "\n"
 printf "#####################################################################\n"
@@ -118,7 +133,7 @@ printf "\n\n"
 
 # Module 4
 # Unicycler Hybrid Assembly with Corrected Illumina and Nanopore Reads py36
-FLYEGFA="$FLYEOUT"2-repeat/graph_final.gfa
+FLYEGFA="$FLYEOUT"assembly_graph.gfa
 mkdir "$UNICYCLEROUT"
 
 unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 2 -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
@@ -127,10 +142,13 @@ unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --ver
 cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
 
 # Exit py36 Environment
-source deactivate
+conda deactivate
 
 printf "Thank you for using the Hybrid Assembly Pipeline :D\n"
+printf "If  you found this pipeline helpful please consider citing:\n"
+printf "						TBA							\n"
+
 printf "K bye.\n\n"
 
 # Exit Pipeline
-exit
+exit 0
