@@ -27,7 +27,7 @@ printf "2018 Benjamin J Perry - (CC BY-NC-SA 4.0)\n"
 printf "Author: Benjamin .J Perry\n"
 printf "Email: benjamin.perry@postgrad.otago.ac.nz\n"
 printf "Version: v1.2.0\n\n"
-printf "Revised: 06/09/2019\n\n"
+printf "Revised: 10/09/2019\n\n"
 sleep 5
 
 printf "Begin Execution at: $(date)\n\n"
@@ -55,7 +55,7 @@ if [ -f $1 ]; then
 	printf "ONT Read File: $ONTFILT\n\n"
     STRAIN=$(echo $ONTFILT | cut -d "." -f 1)
 else
-	printf "ERRORL: No file designated for ONT reads.\n"
+	printf "ERROR: No file designated for ONT reads.\n"
 	printf "Usage: ./HybridAssembly.sh '$STRAIN'.chop.filt.*.fastq Illumina.*.R1.fastq.gz Illumina.*.R2.fastq.gz\n\n"
 	exit 1
 fi
@@ -85,7 +85,7 @@ printf "#####################################################################\n"
 printf "\n\n"
 
 # Module 1
-# SPAdes K-mer Correction of Illumina Data py36
+# SPAdes K-mer Correction of Illumina Data
 spades.py -1 "$ILLUMINAR1" -2 "$ILLUMINAR2" -o "$SPADESCOROUT" --only-error-correction -t 14 -m 24
 SPADESCOROUTR1="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R1"`
 SPADESCOROUTR2="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R2"`
@@ -97,7 +97,7 @@ printf "#####################################################################\n"
 printf "\n\n"
 
 # Module 2
-# LoRDEC K-mer Correction of the Nanopore Long Reads py36
+# LoRDEC K-mer Correction of the Nanopore Long Reads
 mkdir "$LORDECCOROUT"
 LORDECCOROUTFILE="$LORDECCOROUT""$STRAIN".lordec.fasta
 ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN".cat.cor.fastq.gz
@@ -106,7 +106,7 @@ lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 21 -s 3 -T 14 -p -o "$LO
 
 # Exit py36 Environment
 conda deactivate
-# Set Environment to python v2.7
+#Set Environment to py27
 source activate Flye
 
 printf "\n"
@@ -116,8 +116,8 @@ printf "#####################################################################\n"
 printf "\n\n"
 
 #0 Module 3
-# Flye Genome Assembly of the LoRDEC Corrected Long Reads py27
-flye --nano-corr "$LORDECCOROUTFILE" -g 6.5m --out-dir "$FLYEOUT" -t 14
+# Flye Genome Assembly of the LoRDEC Corrected Long Reads
+flye --iterations 3 --nano-corr "$LORDECCOROUTFILE" -g 6.5m --out-dir "$FLYEOUT" -t 14
 
 # Exit py27 Environment
 conda deactivate
@@ -145,7 +145,7 @@ conda deactivate
 
 printf "Thank you for using the Hybrid Assembly Pipeline :D\n"
 printf "If  you found this pipeline helpful please consider citing:\n"
-printf "						TBA							\n"
+printf "				TBA							\n"
 
 printf "K bye.\n\n"
 
