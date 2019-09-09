@@ -100,9 +100,9 @@ printf "\n\n"
 # LoRDEC K-mer Correction of the Nanopore Long Reads py36
 mkdir "$LORDECCOROUT"
 LORDECCOROUTFILE="$LORDECCOROUT""$STRAIN".lordec.fasta
-ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN"*.cat.cor.fastq.gz
+ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN".cat.cor.fastq.gz
 cat "$SPADESCOROUTR1" "$SPADESCOROUTR2" > "$ILLUMINASPADESCOR"
-lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 19 -s 3 -T 14 -p -o "$LORDECCOROUTFILE"
+lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 21 -s 3 -T 14 -p -o "$LORDECCOROUTFILE"
 
 # Exit py36 Environment
 conda deactivate
@@ -117,7 +117,7 @@ printf "\n\n"
 
 #0 Module 3
 # Flye Genome Assembly of the LoRDEC Corrected Long Reads py27
-flye --nano-corr "$LORDECCOROUTFILE" -g 7m --out-dir "$FLYEOUT" -t 14
+flye --nano-corr "$LORDECCOROUTFILE" -g 6.5m --out-dir "$FLYEOUT" -t 14
 
 # Exit py27 Environment
 conda deactivate
@@ -135,10 +135,9 @@ printf "\n\n"
 # Unicycler Hybrid Assembly with Corrected Illumina and Nanopore Reads py36
 FLYEGFA="$FLYEOUT"assembly_graph.gfa
 mkdir "$UNICYCLEROUT"
+#FLYEASSEMBLY="$FLYEOUT"
+unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" --existing_long_read_assembly "$FLYEGFA" -l "$LORDECCOROUTFILE" --verbosity 1 -t 14 --keep 2 -o "$UNICYCLEROUT"
 
-unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" -l "$LORDECCOROUTFILE" --verbosity 2 -t 14 --existing_long_read_assembly "$FLYEGFA" -o "$UNICYCLEROUT"
-
-# Module 4
 cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
 
 # Exit py36 Environment
