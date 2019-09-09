@@ -29,7 +29,7 @@ conda deactivate
 
 conda create -n Flye python=2.7  
 source activate Flye  
-conda install  
+conda install flye  
 conda deactivate  
 ```  
 Additionally, you will need to increase the memmory usage allowed by Pilon.  
