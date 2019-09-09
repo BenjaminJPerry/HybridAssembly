@@ -127,7 +127,7 @@ source activate HybridAsBro
 
 printf "\n"
 printf "#####################################################################\n"
-printf "###             Module 4: Unicycler Hybrid Assembly               ###\n"
+printf "###             Module 4: Final Unicycler Hybrid Assembly         ###\n"
 printf "#####################################################################\n"
 printf "\n\n"
 
