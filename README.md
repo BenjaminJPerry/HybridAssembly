@@ -33,7 +33,7 @@ conda install
 conda deactivate  
 ```  
 Additionally, you will need to increase the memmory usage allowed by Pilon.  
-To do so, modify the following line in '/home/<user>/miniconda3/env/HybridAsBro/bin/pilon'  
+To do so, modify the following line in '/home/\<user\>/miniconda3/env/HybridAsBro/bin/pilon'  
 ```bash
 default_jvm_mem_opts = ['-Xms512m', '-Xmx1g']
 ```
