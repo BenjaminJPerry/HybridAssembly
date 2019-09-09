@@ -8,12 +8,15 @@ Additionaly, this pipeline assumes you have pre-treated your Illumina reads, but
 # Overview
 1. Module: SPAdes k-mer Correction
     + SPAdes BayesHammer error correction of Illumina PE data.
+    + SPAdes k-mer corrected reads can be found in SPAdes_Cor/corrected/ for alignment.
 
 2. Module: LoRDEC Long-Read k-mer Correction
     + LoRDEC error correction of ONT long read data with kmer corrected Illumina PE reads.
+    + LoRDEC corrected long reads remain available for alignment in the LoRDEC subdirectory.
 
 3. Module: Flye de novo Assembly with Long-Reads
     + de novo assembly with k-mer corrected ONT reads to generate assembly graph for Unicycler.
+    + Flye iteratively polishes final assembly which remains available in the Flye subdirectory (expect SNVs and miss-assemblies).
 
 4. Module: Final Unicycler Hybrid Assembly
     + Unicycler SPAdes de novo assembly of Illumina reads is closed/corrected with Flye de novo assembly graph.
