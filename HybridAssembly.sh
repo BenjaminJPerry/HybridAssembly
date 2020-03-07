@@ -1,33 +1,20 @@
-# 2018 Benjamin J Perry - Attribution-NonCommercial-ShareAlike 4.0 International
+# 2020 Benjamin J Perry - Attribution-NonCommercial-ShareAlike 4.0 International
 # (CC BY-NC-SA 4.0)
-# Version: 1.2.0
+# Version: 1.3.0
 # Maintainer: Benjamin J Perry
 # Email: benjamin.perry@postgrad.otago.ac.nz
 # Status: Functional
-#
-#!/bin/bash
-# Overview: Nanopore + Illumina Hybrid Assembly Pipeline
-
-# Historic: Loop for trimming used
-# for i in $(ls); do porechop -i "$i"/"$i".fastq --format fastq -v 2 -t 12 -b "$i/$i"_porechop; done
-
-# Historic: Loop for read filtering used
-# for i in $(ls); do filtlong --min_length 1000 -p 80 "$i"/"$i".adpttrim.fastq
-
-# Historic: Command for long read evaluation
-# NanoPlot -t 4 --fastq $i.adpttrim.fastq --plots hex
 
 clear
 printf "\n"
-printf "#####################################################################\n"
-printf "###             ONT Illumina Hybrid Assembly Pipeline             ###\n"
+printf "               ONT Illumina Hybrid Assembly Pipeline\n"
 printf "#####################################################################\n"
 printf "\n\n"
-printf "2018 Benjamin J Perry - (CC BY-NC-SA 4.0)\n"
+printf "2020 Benjamin J Perry - (CC BY-NC-SA 4.0)\n"
 printf "Author: Benjamin .J Perry\n"
 printf "Email: benjamin.perry@postgrad.otago.ac.nz\n"
-printf "Version: v1.2.0\n\n"
-printf "Revised: 10/09/2019\n\n"
+printf "Version: v1.3.0\n\n"
+printf "Revised: 7/03/2020\n\n"
 sleep 5
 
 printf "Begin Execution at: $(date)\n\n"
@@ -79,8 +66,7 @@ UNICYCLEROUT="Unicycler_Assembly/"
 source activate HybridAsBro
 
 printf "\n"
-printf "#####################################################################\n"
-printf "###             Module 1: SPAdes k-mer Correction                 ###\n"
+printf "               Module 1: SPAdes k-mer Correction\n"
 printf "#####################################################################\n"
 printf "\n\n"
 
@@ -91,43 +77,35 @@ SPADESCOROUTR1="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "
 SPADESCOROUTR2="$SPADESCOROUT"corrected/`ls "$SPADESCOROUT"corrected | grep -e "R2"`
 
 printf "\n"
-printf "#####################################################################\n"
-printf "###          Module 2: LoRDEC Long-Read k-mer Correction          ###\n"
+printf "               Module 2: LoRDEC Long-Read k-mer Correction\n"
 printf "#####################################################################\n"
 printf "\n\n"
 
 # Module 2
 # LoRDEC K-mer Correction of the Nanopore Long Reads
 mkdir "$LORDECCOROUT"
-LORDECCOROUTFILE="$LORDECCOROUT""$STRAIN".lordec.fasta
+
+LORDECCOROUTFILEK19="$LORDECCOROUT""$STRAIN".lordec.k19.fasta
+LORDECCOROUTFILEK31="$LORDECCOROUT""$STRAIN".lordec.k31.fasta
+LORDECCOROUTFILEK41="$LORDECCOROUT""$STRAIN".lordec.k41.fasta
 ILLUMINASPADESCOR="$SPADESCOROUT"corrected/"$STRAIN".cat.cor.fastq.gz
 cat "$SPADESCOROUTR1" "$SPADESCOROUTR2" > "$ILLUMINASPADESCOR"
-lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 21 -s 3 -T 14 -p -o "$LORDECCOROUTFILE"
 
-# Exit py36 Environment
-conda deactivate
-#Set Environment to py27
-source activate Flye
+lordec-correct -i "$ONTFILT" -2 "$ILLUMINASPADESCOR" -k 19 -s 4 -T 14 -p -o "$LORDECCOROUTFILEK19"
+lordec-correct -i "$LORDECCOROUTFILEK19" -2 "$ILLUMINASPADESCOR" -k 31 -s 3 -T 14 -p -o "$LORDECCOROUTFILEK31"
+lordec-correct -i "$LORDECCOROUTFILEK31" -2 "$ILLUMINASPADESCOR" -k 41 -s 3 -T 14 -p -o "$LORDECCOROUTFILEK41"
 
 printf "\n"
-printf "#####################################################################\n"
-printf "###        Module 3: Flye de novo Assembly with Long-Reads        ###\n"
+printf "               Module 3: Flye de novo Assembly with Long-Reads\n"
 printf "#####################################################################\n"
 printf "\n\n"
 
 #0 Module 3
 # Flye Genome Assembly of the LoRDEC Corrected Long Reads
-flye --iterations 3 --nano-corr "$LORDECCOROUTFILE" -g 6.5m --out-dir "$FLYEOUT" -t 14
-
-# Exit py27 Environment
-conda deactivate
-
-# Set Environment to python v3.6
-source activate HybridAsBro
+flye --iterations 3 --nano-corr "$LORDECCOROUTFILEK41" -g 6.5m --out-dir "$FLYEOUT" -t 14
 
 printf "\n"
-printf "#####################################################################\n"
-printf "###             Module 4: Final Unicycler Hybrid Assembly         ###\n"
+printf "               Module 4: Final Unicycler Hybrid Assembly\n"
 printf "#####################################################################\n"
 printf "\n\n"
 
@@ -136,11 +114,11 @@ printf "\n\n"
 FLYEGFA="$FLYEOUT"assembly_graph.gfa
 mkdir "$UNICYCLEROUT"
 #FLYEASSEMBLY="$FLYEOUT"
-unicycler -1 "$SPADESCOROUTR1" -2 "$SPADESCOROUTR2" --existing_long_read_assembly "$FLYEGFA" -l "$LORDECCOROUTFILE" --verbosity 1 -t 14 --keep 2 -o "$UNICYCLEROUT"
+unicycler -1 "$ILLUMINAR1" -2 "$ILLUMINAR2" --existing_long_read_assembly "$FLYEGFA" -l "$LORDECCOROUTFILEK41" --verbosity 2 -t 14 --keep 2 -o "$UNICYCLEROUT"
 
 cp $UNICYCLEROUT"assembly.fasta" "$STRAIN".hybrid.complete.fasta
 
-# Exit py36 Environment
+# Exit HybridAsBro Environment
 conda deactivate
 
 printf "Thank you for using the Hybrid Assembly Pipeline :D\n"
