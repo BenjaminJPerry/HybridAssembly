@@ -10,7 +10,7 @@ Additionaly, this pipeline assumes you have pre-treated your Illumina reads, but
     + SPAdes BayesHammer error correction of Illumina PE data.
     + SPAdes k-mer corrected reads can be found in SPAdes_Cor/corrected/ for alignment.
 
-2. Module: LoRDEC Long-Read k-mer Correction
+2. Module: Iterative LoRDEC Long-Read k-mer Correction with Increasing Kmer Size
     + LoRDEC error correction of ONT long read data with kmer corrected Illumina PE reads.
     + LoRDEC corrected long reads remain available for alignment in the LoRDEC subdirectory.
 
@@ -23,16 +23,11 @@ Additionaly, this pipeline assumes you have pre-treated your Illumina reads, but
     + Unicycler built in Pilon polish with chromosomal rotation and iteration corrects consensus assembly.
 
 # Dependencies
-Managing the dependencies depends on conda as the pipeline requires the following environments be created.    
+Pipeline requires the following environments be created.    
 ```bash  
 conda create -n HybridAsBro python=3.6  
 source activate HybridAsBro  
-conda install spades lordec unicycler  
-conda deactivate  
-
-conda create -n Flye python=2.7  
-source activate Flye  
-conda install flye  
+conda install spades lordec flye unicycler  
 conda deactivate  
 ```  
 Additionally, you will need to increase the memmory usage allowed by Pilon.  
